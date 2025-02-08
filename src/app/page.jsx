@@ -20,7 +20,7 @@ export default function Login() {
       style={{ backgroundImage: "url('/20.jpg')" }} 
     >
       <div className="w-[350px] bg-black text-white rounded-[30px] p-10">
-        <h1 className="text-4xl font-bold text-center">Login</h1>
+        <h1 className="text-4xl font-extrabold text-center">Login</h1>
         <form onSubmit={handleSubmit} className="mt-6">
           <div className="relative w-full h-[50px] my-6">
             <input
