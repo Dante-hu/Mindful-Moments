@@ -2,7 +2,7 @@ from flask import Flask, jsonify, request
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token
 from flask_jwt_extended import jwt_required #to protect routes, user must log in first
-
+from flask_cors import CORS
 
 '''
     Error/Succesful code defwnintion
@@ -15,11 +15,12 @@ from flask_jwt_extended import jwt_required #to protect routes, user must log in
 '''
 
 app = Flask(__name__)
+CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}}, supports_credentials=True)
 app.config['JWT_SECRET_KEY'] = 'your-secret-key'  # Replace with a secure key
 bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
 
-# Mock database (replace with a real database later)
+#empty database test
 users_db = {}
 
 
