@@ -1,7 +1,10 @@
 {
   "dependencies": {
+    "autoprefixer": "^10.4.20",
     "axios": "^1.7.9",
     "chart.js": "^4.4.7",
-    "react-router-dom": "^7.1.5"
+    "postcss": "^8.5.1",
+    "react-router-dom": "^7.1.5",
+    "tailwindcss": "^4.0.5"
   }
 }
