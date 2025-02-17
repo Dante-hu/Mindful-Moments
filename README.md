@@ -20,8 +20,8 @@ Mindful Moments is an AI-powered platform designed to help users manage stress t
 
 ## Contributors
 
-- Dante C (role)
-- Ramisa Z(role)
+- Dante C
+- Ramisa Z
 
 ## Demo Video
 
