@@ -3,6 +3,10 @@ from flask_bcrypt import Bcrypt
 from flask_jwt_extended import JWTManager, create_access_token
 from flask_jwt_extended import jwt_required #to protect routes, user must log in first
 from flask_cors import CORS
+from transformers import pipeline 
+from flask import request, jsonify
+import firebase_admin
+from firebase_admin import auth
 
 '''
     Error/Succesful code defwnintion
@@ -19,6 +23,8 @@ CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}}, supports_cred
 app.config['JWT_SECRET_KEY'] = 'your-secret-key'  # Replace with a secure key
 bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
+sentiment_analyzer = pipeline("sentiment-analysis")
+
 
 #empty database test
 users_db = {}
@@ -118,5 +124,26 @@ def clear_mood_logs(username):
     user['mood_logs'] = []
     return jsonify({"message": "Mood logs cleared successfully"}), 200
 
+#function to handle user log mood analysis.
+@app.route('/sentiment-analysis/<username>', methods = ['POST'])
+def analyze_sentiment():
+    data = request.json
+    text = data.get('text')
+    if not text:
+        return jsonify({"error": "Missing text"}), 400
+
+    result = sentiment_analyzer(text)[0]
+    return jsonify(result), 200
+
+@app.route('/protected-route', methods=['GET'])
+def protected_route():
+    token = request.headers.get('Authorization').split('Bearer ')[1]
+    try:
+        decoded_token = auth.verify_id_token(token)
+        uid = decoded_token['uid']
+        # Proceed with Flask logic
+        return jsonify({"message": "Access granted"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 401
 if __name__ == '__main__':
     app.run(debug=True)

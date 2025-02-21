@@ -1,40 +1,30 @@
+// api/auth.ts
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../lib/firebase";
 import axios, { AxiosError } from 'axios';
-
-//base url
-const API_BASE_URL = "http://127.0.0.1:5000";  //backend endpoints
 
 interface ErrorResponse {
   message: string;
 }
 
-//login function component
-export const login = async (username: string, password: string) => {
-  try {//login
-    const response = await axios.post(`${API_BASE_URL}/login`, { username, password });
-    return response.data.access_token;
-  } catch (error) {//failure
-    const axiosError = error as AxiosError<ErrorResponse>;
-    console.error(
-      'Login failed:',
-      axiosError.response?.data?.message || axiosError.message
-    );
-    throw error;
+// Register with Firebase
+export const register = async (email: string, password: string) => {
+  try {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    return userCredential.user; // Returns Firebase user object
+  } catch (error: any) {
+    console.error("Registration error:", error.code, error.message);
+     throw new Error(error.message || "Registration failed");
   }
 };
 
-//register function for user
-export const register = async (username: string, password: string) => {
+// Login with Firebase
+export const login = async (email: string, password: string) => {
   try {
-    console.log("Sending request to:", `${API_BASE_URL}/register`);
-    console.log("Request data:", { username, password });
-
-    const response = await axios.post(`${API_BASE_URL}/register`, { username, password });
-
-    console.log("Response received:", response.data);
-    return response.data;
-  } catch (error) {
-    const axiosError = error as AxiosError<ErrorResponse>;
-    console.error("Registration failed:", axiosError.response?.data?.message || axiosError.message);
-    throw error;
-  } 
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    return userCredential.user; // Returns Firebase user object
+  } catch (error: any) {
+  console.error("Login error:", error.code, error.message);
+  throw new Error(error.message || "Registration failed");
+  }
 };
