@@ -39,3 +39,13 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# SQLite database files
+mindful_moments.db
+*.db
+
+# Python build artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd

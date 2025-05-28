@@ -83,6 +83,7 @@ def create_access_token(data: dict):
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
+#helper function
 async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
@@ -96,11 +97,13 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = De
         raise HTTPException(status_code=401, detail="User not found")
     return user
 
+
 # API endpoints
 @app.get("/")
 async def home():
     return {"message": "Welcome to Mindful Moments Backend!"}
 
+#register endpoint
 @app.post("/register")
 async def register(user: UserCreate, db: Session = Depends(get_db)):
     db_user = db.query(User).filter(User.username == user.username).first()
@@ -113,6 +116,8 @@ async def register(user: UserCreate, db: Session = Depends(get_db)):
     db.refresh(db_user)
     return {"message": "User registered successfully"}
 
+
+#login endpoint
 @app.post("/login", response_model=Token)
 async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     user = db.query(User).filter(User.username == form_data.username).first()
@@ -121,6 +126,8 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = 
     access_token = create_access_token(data={"sub": user.username})
     return {"access_token": access_token, "token_type": "bearer"}
 
+
+#log-mood endpoint
 @app.post("/log-mood")
 async def log_mood(mood: MoodCreate, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     result = sentiment_analyzer(mood.mood_text)[0]
