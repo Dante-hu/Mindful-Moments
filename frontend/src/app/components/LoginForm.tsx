@@ -1,4 +1,3 @@
-// src/app/components/LoginForm.tsx
 "use client";
 import { useState } from "react";
 import { login } from "../api/auth";

@@ -4,7 +4,6 @@ const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000',
 });
 
-//TypeScript interfaces for API responses
 interface RegisterResponse {
   message: string;
 }
@@ -16,18 +15,17 @@ interface TokenResponse {
 
 interface MoodResponse {
   message: string;
-  sentiment: string;
+  emotion: string; //Changed from sentiment
   feedback: string;
 }
 
 interface MoodEntry {
   mood_text: string;
-  sentiment: string;
+  emotion: string; //Changed from sentiment
   feedback: string;
   timestamp: string;
 }
 
-//Centralized error handling
 async function handleApiError<T>(promise: Promise<T>): Promise<T> {
   try {
     return await promise;
@@ -36,12 +34,10 @@ async function handleApiError<T>(promise: Promise<T>): Promise<T> {
   }
 }
 
-// Register a new user
 export async function register(username: string, password: string): Promise<RegisterResponse> {
   return handleApiError(api.post('/register', { username, password }).then(res => res.data));
 }
 
-// Login and get JWT token
 export async function login(username: string, password: string): Promise<TokenResponse> {
   return handleApiError(
     api
@@ -52,7 +48,6 @@ export async function login(username: string, password: string): Promise<TokenRe
   );
 }
 
-// Log a mood
 export async function logMood(token: string, moodText: string): Promise<MoodResponse> {
   return handleApiError(
     api
@@ -63,7 +58,6 @@ export async function logMood(token: string, moodText: string): Promise<MoodResp
   );
 }
 
-// Get mood history
 export async function getMoodHistory(token: string): Promise<MoodEntry[]> {
   return handleApiError(
     api
@@ -74,7 +68,6 @@ export async function getMoodHistory(token: string): Promise<MoodEntry[]> {
   );
 }
 
-// Clear mood logs
 export async function clearMoodLogs(token: string): Promise<RegisterResponse> {
   return handleApiError(
     api
